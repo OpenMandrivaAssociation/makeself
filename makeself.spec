@@ -9,7 +9,6 @@ Patch1:		stripmakeself-bin_sh.patch
 License:	GPL
 Group: 		Archiving/Compression
 Url:		http://www.megastep.org/makeself/
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires:	bzip2
 Requires:	coreutils
 Requires:	gnupg
