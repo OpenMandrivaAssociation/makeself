@@ -1,7 +1,7 @@
 Summary:	Generates a self-extractable archive from a directory
 Name:		makeself
 Version:	2.1.4
-Release:	%mkrel 4
+Release:	%mkrel 5
 Source0:	http://www.megastep.org/makeself/%{name}-%{version}.tar.bz2
 Source1:	http://angst.cynapses.org/stripmakeself
 Patch0:		makeself-2.1.4-deb.patch
