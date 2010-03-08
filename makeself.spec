@@ -1,12 +1,10 @@
 Summary:	Generates a self-extractable archive from a directory
 Name:		makeself
-Version:	2.1.4
-Release:	%mkrel 5
+Version:	2.1.5
+Release:	%mkrel 1
 Source0:	http://www.megastep.org/makeself/%{name}-%{version}.tar.bz2
 Source1:	http://angst.cynapses.org/stripmakeself
-Patch0:		makeself-2.1.4-deb.patch
-Patch1:		stripmakeself-bin_sh.patch
-License:	GPL
+License:	GPLv3
 Group: 		Archiving/Compression
 Url:		http://www.megastep.org/makeself/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -40,10 +38,8 @@ attached to it though!).
 
 
 %prep
-%setup
+%setup -q
 cp -p %{SOURCE1} .
-%patch0 -p1 -b .deb
-%patch1 -p1 -b .binsh
 
 %build
 
@@ -62,7 +58,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc COPYING README TODO update-readme makeself.lsm
+%doc COPYING README TODO makeself.lsm
 %{_bindir}/*
 %{_mandir}/man1/*
 %{_datadir}/makeself/*
