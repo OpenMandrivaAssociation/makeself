@@ -1,7 +1,7 @@
 Summary:	Generates a self-extractable archive from a directory
 Name:		makeself
 Version:	2.1.5
-Release:	%mkrel 2
+Release:	%mkrel 3
 Source0:	http://www.megastep.org/makeself/%{name}-%{version}.tar.bz2
 Source1:	http://angst.cynapses.org/stripmakeself
 License:	GPLv3
