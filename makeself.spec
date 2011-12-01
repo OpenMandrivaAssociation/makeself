@@ -44,17 +44,17 @@ cp -p %{SOURCE1} .
 %build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{_bindir} \
-	$RPM_BUILD_ROOT%{_mandir}/man1 \
-	$RPM_BUILD_ROOT%{_datadir}/makeself/
-install -m 755 makeself.sh $RPM_BUILD_ROOT%{_bindir}/makeself
-install -m 755 makeself-header.sh $RPM_BUILD_ROOT%{_datadir}/makeself/makeself-header
-install -m 755 stripmakeself $RPM_BUILD_ROOT%{_bindir}/
-install -m 644 makeself.1 $RPM_BUILD_ROOT%{_mandir}/man1/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_bindir} \
+	%{buildroot}%{_mandir}/man1 \
+	%{buildroot}%{_datadir}/makeself/
+install -m 755 makeself.sh %{buildroot}%{_bindir}/makeself
+install -m 755 makeself-header.sh %{buildroot}%{_datadir}/makeself/makeself-header
+install -m 755 stripmakeself %{buildroot}%{_bindir}/
+install -m 644 makeself.1 %{buildroot}%{_mandir}/man1/
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
