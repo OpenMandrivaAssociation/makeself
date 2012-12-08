@@ -1,0 +1,215 @@
+#!/usr/bin/perl -w
+# stripmakeself - strip makeself off an archive
+# Copyright (C) 2002 Angst <Angst@8ung.at>
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+# $Id: stripmakeself,v 1.5 2004/03/07 14:38:22 cvs Exp $
+
+use strict;
+use Getopt::Long;
+use File::Temp qw/ tempdir /;
+use File::Basename;
+
+my ($flagextract, $flagextracttmp, $flagsetup, $flaghelp, $flaglist, $flagdump) = 0;
+sub help
+{
+    print "Strip makeself off an archive (tar.gz, tar.bz2 or tar)\n";
+    print "Usage: $0 [OPTIONS] <FILE>\n";
+    print "OPTIONS:\n";
+    print "      -x, --extract     ->  extract contained archive\n";
+    print "      -X                ->  extract contained archive into temporary dir\n";
+    print "      -l, --list        ->  list contained archive\n";
+    print "      -d, --dump        ->  dump contained archive to stdout\n";
+    print "      -s, --setup       ->  extract archive into temporary location and run loki-setup\n";
+    print "      -h, --help        ->  This screen\n";
+    print "\n";
+    exit 0;
+}
+
+my ($cmdlist, $cmdextract) = undef;
+
+my $bufsize = 4096 * 8;
+
+sub untar
+{
+	if(!defined $cmdextract)
+	{
+		print STDERR "I don't know how to extract this file\n";
+		return;
+	}
+	local *TAR;
+	print STDERR "extracting ...\n";
+	open(TAR,"|$cmdextract") or die $!;
+	my $buf;
+	while(read(FILE,$buf,$bufsize))
+	{
+		print TAR $buf;
+	}
+	close TAR;
+}
+
+sub listtar
+{
+	if(!defined $cmdlist)
+	{
+		print STDERR "I don't know how to list this file\n";
+		return;
+	}
+	local *TAR;
+	open(TAR,"|$cmdlist") or die $!;
+	my $buf;
+	while(read(FILE,$buf,$bufsize))
+	{
+		print TAR $buf;
+	}
+	close TAR;
+}
+
+# search through file for a known archive type. set extract and list commands.
+# return offset on success, -1 otherwise.
+sub getarchiveoffset
+{
+	my ($byte, $pos, $buf);
+	for($pos=tell(FILE);read(FILE,$byte,1);$pos++)
+	{
+		if($byte eq "\x1F")
+		{
+			if(read(FILE,$buf,2) == 2 && $buf eq "\x8B\x08")
+			{
+				print STDERR "gzip found at position $pos\n";
+				seek(FILE,$pos,0);
+				$cmdextract="tar -xzf -";
+				$cmdlist="tar -tvzf -";
+				return $pos;
+			}
+			seek(FILE,$pos+1,0);
+		}
+		if($byte eq 'B')
+		{
+			if(read(FILE,$buf,2) == 2 && $buf eq 'Zh')
+			{
+				print STDERR "bzip2 found at position $pos\n";
+				seek(FILE,$pos,0);
+				$cmdextract="tar -xjf -";
+				$cmdlist="tar -tvjf -";
+				return $pos;
+			}
+			seek(FILE,$pos+1,0);
+		}
+		if($byte eq 'u')
+		{
+			if(read(FILE,$buf,6) == 6 && $buf eq 'star  ')
+			{
+				$pos-=257; # tar header
+				print STDERR "tar found at position $pos\n";
+				seek(FILE,$pos,0);
+				$cmdextract="tar -xf -";
+				$cmdlist="tar -tvf -";
+				return $pos;
+			}
+			seek(FILE,$pos+1,0);
+		}
+	}
+	return -1;
+}
+
+Getopt::Long::Configure("no_ignore_case");
+GetOptions (
+    "extract|x"   => \$flagextract,
+    "X"           => \$flagextracttmp,
+    "setup|s"     => \$flagsetup,
+    "list|l"      => \$flaglist,
+    "dump|d"      => \$flagdump,
+    "help|h"      => \$flaghelp
+    );
+
+if($#ARGV<0 || $flaghelp)
+{
+	help();
+}
+
+my $file = shift @ARGV;
+
+open (FILE,'<',$file) or die $!;
+
+<FILE> =~ /#! ?\/bin\/sh\n/ or die "file is not a shell script";
+
+my $offset = getarchiveoffset();
+if($offset < 0)
+{
+	print STDERR "compression format not recognized\n";
+	exit 1;
+}
+
+if($flagextract || $flagextracttmp)
+{
+	my $tmpdir = basename($file);
+	if($flagextracttmp)
+	{
+		$tmpdir = tempdir($tmpdir.".XXXXX", TMPDIR => 1) or die $!;
+	}
+	else
+	{
+		$tmpdir = $tmpdir.".d";
+		mkdir ($tmpdir, 0777) or die $!;
+	}
+
+	chdir($tmpdir) or die $!;
+
+	untar();
+
+	print STDOUT "files extracted in ",$tmpdir,"\n";
+	exit 0;
+}
+elsif($flaglist)
+{
+	listtar();
+	exit 0;
+}
+elsif($flagdump)
+{
+	my $buf;
+	while(read(FILE,$buf,$bufsize))
+	{
+		print $buf;
+	}
+	exit 0;
+}
+elsif($flagsetup)
+{
+	my $tmpdir = tempdir("stripmakeself.XXXXX", CLEANUP => 1, TMPDIR => 1) or die $!;
+
+	chdir($tmpdir) or die $!;
+
+	untar();
+	close FILE;
+
+	if (! -e 'setup.data/setup.xml')
+	{
+		print STDERR "setup.data/setup.xml is not here\n";
+		if( -e 'setupstuff.tar.gz' )
+		{
+			print STDERR "maybe it's in setupstuff.tar.gz?\n";
+			system('tar -xzf setupstuff.tar.gz');
+			print STDERR "yes, it is!\n" if(-e 'setup.data/setup.xml');
+		}
+	}
+
+	print STDERR "running loki-setup\n";
+
+	system("loki-setup");
+}
+

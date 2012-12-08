@@ -1,16 +1,16 @@
 Summary:	Generates a self-extractable archive from a directory
 Name:		makeself
 Version:	2.1.5
-Release:	%mkrel 3
+Release:	7
 Source0:	http://www.megastep.org/makeself/%{name}-%{version}.tar.bz2
 Source1:	http://angst.cynapses.org/stripmakeself
 License:	GPLv3
 Group: 		Archiving/Compression
 Url:		http://www.megastep.org/makeself/
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires:	bzip2
 Requires:	coreutils
 Requires:	gnupg
+BuildArch:	noarch
 
 %description
 Makeself is a small shell script that generates a self-extractable
@@ -44,7 +44,6 @@ cp -p %{SOURCE1} .
 %build
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_bindir} \
 	%{buildroot}%{_mandir}/man1 \
 	%{buildroot}%{_datadir}/makeself/
@@ -53,14 +52,53 @@ install -m 755 makeself-header.sh %{buildroot}%{_datadir}/makeself/makeself-head
 install -m 755 stripmakeself %{buildroot}%{_bindir}/
 install -m 644 makeself.1 %{buildroot}%{_mandir}/man1/
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
 %doc COPYING README TODO makeself.lsm
 %{_bindir}/*
 %{_mandir}/man1/*
 %{_datadir}/makeself/*
 
+
+
+
+%changelog
+* Wed May 04 2011 Oden Eriksson <oeriksson@mandriva.com> 2.1.5-3mdv2011.0
++ Revision: 666361
+- mass rebuild
+
+* Mon Dec 06 2010 Oden Eriksson <oeriksson@mandriva.com> 2.1.5-2mdv2011.0
++ Revision: 612805
+- the mass rebuild of 2010.1 packages
+
+* Mon Mar 08 2010 Sandro Cazzaniga <kharec@mandriva.org> 2.1.5-1mdv2010.1
++ Revision: 516390
+- Update to 2.1.5
+
+* Fri Sep 04 2009 Thierry Vignaud <tv@mandriva.org> 2.1.4-5mdv2010.0
++ Revision: 429948
+- rebuild
+
+* Mon Jul 28 2008 Thierry Vignaud <tv@mandriva.org> 2.1.4-4mdv2009.0
++ Revision: 251795
+- rebuild
+
+* Thu Jan 03 2008 Olivier Blin <oblin@mandriva.com> 2.1.4-2mdv2008.1
++ Revision: 140944
+- restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+
+* Wed Feb 14 2007 Lenny Cartier <lenny@mandriva.com> 2.1.4-2mdv2007.0
++ Revision: 120926
+- Import makeself
+
+* Sun Oct 01 2006 Giuseppe Ghibò <ghibo@mandriva.coM> 2.1.4-2mdk
+- Fixed in stripmakeself handling of archives beginning with empty lines
+  (thanks to pixel).
+
+* Tue May 16 2006 Giuseppe Ghibò <ghibo@mandriva.com> 2.1.4-1mdk
+- Initial release 2.1.4.
+- Merged Patch0 from Deb.
 
