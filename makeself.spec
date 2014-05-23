@@ -1,16 +1,16 @@
 Summary:	Generates a self-extractable archive from a directory
 Name:		makeself
 Version:	2.1.5
-Release:	11
+Release:	7
+Source0:	http://www.megastep.org/makeself/%{name}-%{version}.tar.bz2
+Source1:	http://angst.cynapses.org/stripmakeself
 License:	GPLv3
 Group: 		Archiving/Compression
 Url:		http://www.megastep.org/makeself/
-Source0:	http://www.megastep.org/makeself/%{name}-%{version}.tar.bz2
-Source1:	http://angst.cynapses.org/stripmakeself
-BuildArch:	noarch
 Requires:	bzip2
 Requires:	coreutils
 Requires:	gnupg
+BuildArch:	noarch
 
 %description
 Makeself is a small shell script that generates a self-extractable
@@ -59,9 +59,46 @@ install -m 644 makeself.1 %{buildroot}%{_mandir}/man1/
 %{_datadir}/makeself/*
 
 
-%changelog
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 2.1.5-11
-+ Revision: 8072da7
-- MassBuild#289: Increase release tag
 
+
+%changelog
+* Wed May 04 2011 Oden Eriksson <oeriksson@mandriva.com> 2.1.5-3mdv2011.0
++ Revision: 666361
+- mass rebuild
+
+* Mon Dec 06 2010 Oden Eriksson <oeriksson@mandriva.com> 2.1.5-2mdv2011.0
++ Revision: 612805
+- the mass rebuild of 2010.1 packages
+
+* Mon Mar 08 2010 Sandro Cazzaniga <kharec@mandriva.org> 2.1.5-1mdv2010.1
++ Revision: 516390
+- Update to 2.1.5
+
+* Fri Sep 04 2009 Thierry Vignaud <tv@mandriva.org> 2.1.4-5mdv2010.0
++ Revision: 429948
+- rebuild
+
+* Mon Jul 28 2008 Thierry Vignaud <tv@mandriva.org> 2.1.4-4mdv2009.0
++ Revision: 251795
+- rebuild
+
+* Thu Jan 03 2008 Olivier Blin <oblin@mandriva.com> 2.1.4-2mdv2008.1
++ Revision: 140944
+- restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+
+* Wed Feb 14 2007 Lenny Cartier <lenny@mandriva.com> 2.1.4-2mdv2007.0
++ Revision: 120926
+- Import makeself
+
+* Sun Oct 01 2006 Giuseppe Ghibò <ghibo@mandriva.coM> 2.1.4-2mdk
+- Fixed in stripmakeself handling of archives beginning with empty lines
+  (thanks to pixel).
+
+* Tue May 16 2006 Giuseppe Ghibò <ghibo@mandriva.com> 2.1.4-1mdk
+- Initial release 2.1.4.
+- Merged Patch0 from Deb.
 
