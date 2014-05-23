@@ -1,4 +1,5 @@
 Summary:	Generates a self-extractable archive from a directory
+
 Name:		makeself
 Version:	2.1.5
 Release:	11
@@ -57,11 +58,5 @@ install -m 644 makeself.1 %{buildroot}%{_mandir}/man1/
 %{_bindir}/*
 %{_mandir}/man1/*
 %{_datadir}/makeself/*
-
-
-%changelog
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 2.1.5-11
-+ Revision: 8072da7
-- MassBuild#289: Increase release tag
 
 
