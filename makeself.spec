@@ -1,5 +1,6 @@
 Summary:	Generates a self-extractable archive from a directory
 
+
 Name:		makeself
 Version:	2.1.5
 Release:	11
