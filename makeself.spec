@@ -2,12 +2,12 @@ Summary:	Generates a self-extractable archive from a directory
 
 
 Name:		makeself
-Version:	2.1.5
-Release:	16
+Version:	2.4.0
+Release:	1
 License:	GPLv3
 Group: 		Archiving/Compression
 Url:		http://www.megastep.org/makeself/
-Source0:	http://www.megastep.org/makeself/%{name}-%{version}.tar.bz2
+Source0:	https://github.com/megastep/makeself/archive/release-%{version}.tar.gz
 Source1:	http://angst.cynapses.org/stripmakeself
 BuildArch:	noarch
 Requires:	bzip2
@@ -40,7 +40,7 @@ attached to it though!).
 
 
 %prep
-%setup -q
+%setup -q -n %{name}-release-%{version}
 cp -p %{SOURCE1} .
 
 %build
@@ -55,7 +55,7 @@ install -m 755 stripmakeself %{buildroot}%{_bindir}/
 install -m 644 makeself.1 %{buildroot}%{_mandir}/man1/
 
 %files
-%doc COPYING README TODO makeself.lsm
+%doc COPYING makeself.lsm
 %{_bindir}/*
 %{_mandir}/man1/*
 %{_datadir}/makeself/*
