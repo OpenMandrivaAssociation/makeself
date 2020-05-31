@@ -2,7 +2,7 @@ Summary:	Generates a self-extractable archive from a directory
 
 
 Name:		makeself
-Version:	2.4.0
+Version:	2.4.2
 Release:	1
 License:	GPLv3
 Group: 		Archiving/Compression
