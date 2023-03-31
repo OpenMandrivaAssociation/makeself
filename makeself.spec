@@ -3,7 +3,7 @@ Summary:	Generates a self-extractable archive from a directory
 
 Name:		makeself
 Version:	2.4.5
-Release:	1
+Release:	2
 License:	GPLv3
 Group: 		Archiving/Compression
 Url:		http://www.megastep.org/makeself/
