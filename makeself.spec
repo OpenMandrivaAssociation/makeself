@@ -6,7 +6,7 @@ Version:	2.4.5
 Release:	2
 License:	GPLv3
 Group: 		Archiving/Compression
-Url:		http://www.megastep.org/makeself/
+Url:		https://www.megastep.org/makeself/
 Source0:	https://github.com/megastep/makeself/archive/release-%{version}.tar.gz
 Source1:	http://angst.cynapses.org/stripmakeself
 BuildArch:	noarch
